@@ -1,0 +1,106 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    application: eap-app-from-template
+    template: eap73-basic-s2i
+    template.openshift.io/template-instance-owner: 2ec66132-2589-45a8-a2c3-cd88eab5dda5
+    xpaas: "7.3"
+  name: eap-app-from-template
+  namespace: eap-demo
+  resourceVersion: "92044"
+  uid: ee1c112b-b828-46a5-904f-336901e9f405
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    deploymentConfig: eap-app-from-template
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        application: eap-app-from-template
+        deploymentConfig: eap-app-from-template
+      name: eap-app-from-template
+    spec:
+      containers:
+      - env:
+        - name: JGROUPS_PING_PROTOCOL
+          value: dns.DNS_PING
+        - name: OPENSHIFT_DNS_PING_SERVICE_NAME
+          value: eap-app-from-template-ping
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "8888"
+        - name: MQ_CLUSTER_PASSWORD
+          value: S71w17Ft
+        - name: MQ_QUEUES
+        - name: MQ_TOPICS
+        - name: JGROUPS_CLUSTER_PASSWORD
+          value: etNims8V
+        - name: AUTO_DEPLOY_EXPLODED
+          value: "false"
+        - name: ENABLE_GENERATE_DEFAULT_DATASOURCE
+          value: "false"
+        image: image-registry.openshift-image-registry.svc:5000/eap-demo/eap-app-from-template@sha256:e030265cef4d775fcd7dbfb400c773bc9ef6c36a27f8b80b1c0ba3a138f01072
+        imagePullPolicy: Always
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/livenessProbe.sh
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: eap-app-from-template
+        ports:
+        - containerPort: 8778
+          name: jolokia
+          protocol: TCP
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8888
+          name: ping
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/readinessProbe.sh
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 75
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - eap-app-from-template
+      from:
+        kind: ImageStreamTag
+        name: eap-app-from-template:latest
+        namespace: eap-demo
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/eap-demo/eap-app-from-template@sha256:e030265cef4d775fcd7dbfb400c773bc9ef6c36a27f8b80b1c0ba3a138f01072
+    type: ImageChange
+  - type: ConfigChange
