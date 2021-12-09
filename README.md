@@ -3,11 +3,12 @@
 ## Operation
 
 1. Install OC Client.
-  - Download OC: [oc client folder](./tools/oc-client/)
+  - Download OC: http://d3s3zqyaz8cp2d.cloudfront.net/pub/openshift-v4/clients/ocp/4.6.20/openshift-client-linux-4.6.20.tar.gz
+    - [oc client folder](./tools/oc-client/)
   - Copy on your PATH
   - Run: oc version
 
-2. Login al cluster
+2. Cluster login:
   - Go to cluster and login as cluster-admin (kubeadmin).
   - Click on user button (upper rigth), and click 'Copy login command'
   - Copy the login command shown.
