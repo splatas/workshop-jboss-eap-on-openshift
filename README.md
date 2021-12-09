@@ -14,7 +14,8 @@
       * Users:  user1 .. user10, password: BAqpz5uVc33Quqf5
     - Click on user button (upper rigth), and click 'Copy login command'
     - Copy the login command shown.
-    - Paste on your terminal. 
+    - Paste on your terminal: oc login --token=TOKEN --server=https://api.cluster-58b1.dynamic.opentlc.com:6443
+
 
 3. Basic Operations:
     - Whoami: 
