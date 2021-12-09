@@ -3,22 +3,40 @@
 ## Operation
 
 1. Install OC Client.
-  - Download OC: http://d3s3zqyaz8cp2d.cloudfront.net/pub/openshift-v4/clients/ocp/4.6.20/openshift-client-linux-4.6.20.tar.gz
-    - [oc client folder](./tools/oc-client/)
-  - Copy on your PATH
-  - Run: oc version
+    - Download OC: http://d3s3zqyaz8cp2d.cloudfront.net/pub/openshift-v4/clients/ocp/4.6.20/openshift-client-linux-4.6.20.tar.gz
+      * [oc client folder](./tools/oc-client/)
+    - Copy on your PATH
+    - Run: oc version
 
 2. Cluster login:
-  - Go to cluster and login as cluster-admin (kubeadmin).
-  - Click on user button (upper rigth), and click 'Copy login command'
-  - Copy the login command shown.
-  - Paste on 
+    - Go to cluster and login as cluster-admin: https://console-openshift-console.apps.cluster-58b1.dynamic.opentlc.com/dashboards
+      * Cluster admin: user: admin , password: pU8uNdrpviUgbRrH
+      * Users:  user1 .. user10, password: BAqpz5uVc33Quqf5
+    - Click on user button (upper rigth), and click 'Copy login command'
+    - Copy the login command shown.
+    - Paste on your terminal. 
 
 3. Basic Operations:
-  - Projects / Namespaces
-  - Get /Objects Describe
-  - Edit Objects
-  - Create objects from file
+    - Whoami: 
+      * oc whoami
+    - Projects / Namespaces:
+      * oc projects (list all projects)
+      * oc project PROJECT_NAME: oc new-project eap-demo
+    - New application:
+      * oc new-build IMAGE_NAME~SOURCE_CODE --name BUILD_NAME: oc new-build nodejs~https://github.com/cesarvr/hello-world-nodejs --name nodejs-build
+      * oc new-app nodejs-build --name=my-nodejs-app
+      * oc expose service/my-nodejs-app  (create a route)
+    - Get / Describe Objects:
+      * oc get all
+      * oc get OBJECT_TYPE (list): oc get bc
+      * oc get OBJECT_TYPE OBJECT_NAME -o yaml -n PROJECT_NAME: 
+        * oc get bc nodejs-build -o yaml
+        * oc get bc nodejs-build -o yaml > nodejs-build.yaml
+    - Edit Objects:
+      * oc edit OBJECT_TYPE OBJECT_NAME: oc edit bc nodejs-build
+    - Create / Delete objects from file:
+      * oc create -f FILE_NAME: oc create -f nodejs-build.yaml
+      * oc delete -f FILE_NAME: oc delete -f nodejs-build.yaml
 
 
 ## Deploy
