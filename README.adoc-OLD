@@ -2,8 +2,16 @@
 
 ## Operation
 1. Install OC Client.
-  a. Download OC: (tools folder)
-  b. Copy on PATH
+  a. Download OC: (tools folder) link:./tools/oc-client
+  [Mi archivo](./tools/oc-client/oc-4.9.10-linux.tar.gz)
+  My favorite search engine is [Duck Duck Go](https://duckduckgo.com).
+
+  ### CI
+  ![CI](./docs/images/pipeline-ci.png)
+
+
+
+  b. Copy on your PATH
   c. Run: oc version
 2. Login al cluster
   a. Go to cluster and login as cluster-admin (kubeadmin).
