@@ -41,6 +41,73 @@
 
 
 ## Deploy
+1. Working with JBoss EAP for OpenShift Imagestreams and Templates
+    - Work in namespaces previously created 'eap-demo'
+      * oc project eap-demo
+    - If you are using any HTTPS-enabled features, create a keystore and a secret (ex: using eap73-https-s2i template for JDK 8)
+      * Create keystore:
+        + keytool -genkey -keyalg RSA -alias my-kesystore -keystore my-keystore-file.jks -validity 360 -keysize 2048
+      * Create a secret: 
+        + oc secrets new my-keystore-secret my-keystore-file.jks
+    - Configure Authentication to the Red Hat Container Registry
+      On Red Hat Customer Portal, create [an authentication token using a registry service account.](https://access.redhat.com/RegistryAuthentication)
+      * Create the authentication token secret for your OpenShift project using the YAML file
+        + oc create -f myserviceaccount-secret.yaml
+      * Assign the secret to default and builder service accounts:
+        + oc secrets link default myserviceaccount-pull-secret --for=pull
+        + oc secrets link builder myserviceaccount-pull-secret --for=pull
+
+    - Import the Latest JBoss EAP for OpenShift Imagestreams and Templates
+      * for resource in \
+          eap73-amq-persistent-s2i.json \
+          eap73-amq-s2i.json \
+          eap73-basic-s2i.json \
+          eap73-https-s2i.json \
+          eap73-image-stream.json \
+          eap73-sso-s2i.json \
+          eap73-starter-s2i.json \
+          eap73-third-party-db-s2i.json \
+          eap73-tx-recovery-s2i.json
+        do
+          oc replace -n openshift --force -f \
+        https://raw.githubusercontent.com/jboss-container-images/jboss-eap-7-openshift-image/eap73/templates/${resource}
+        done
+      * Check the [Catalog](https://console-openshift-console.apps.cluster-58b1.dynamic.opentlc.com/catalog) and the [ImageStreams](https://console-openshift-console.apps.cluster-58b1.dynamic.opentlc.com/k8s/ns/openshift/imagestreams)
+
+    - Create a new OpenShift application that uses the JBoss EAP for OpenShift image and the source code of your Java application.
+      * oc new-app --template=eap73-basic-s2i \
+      -p IMAGE_STREAM_NAMESPACE=eap-demo \
+      -p SOURCE_REPOSITORY_URL=https://github.com/jboss-developer/jboss-eap-quickstarts \
+      -p SOURCE_REPOSITORY_REF=7.3.x-openshift \
+      -p CONTEXT_DIR=kitchensink
+
+      * Check the process 
+      
+      ![new-app-image](./images/new-app.png)
+
+      * Objects created: 
+     
+      ![objects-created-image](./images/new-app.png)
+     
+      ![template-detail-1-image](./images/new-app.png)
+     
+      ![template-detail-1-image](./images/new-app.png)
+     
+      ![template-detail-1-image](./images/new-app.png)
+     
+      ![template-detail-1-image](./images/new-app.png)
+      
+    - Launch deploy:
+      * oc start-build eap-app
+
+      ![build-failed-image](./images/new-app.png)
+
+    - Fix: Namespace: eap-demo => openshift
+      * oc edit bc eap-app
+      * oc edit bc eap-app-build-artifacts
+
+      ![build-ok-image](./images/new-app.png)
+
 
 ## Monitoring
 
