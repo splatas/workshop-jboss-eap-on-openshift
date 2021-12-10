@@ -1,0 +1,48 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewBuild
+  creationTimestamp: "2021-12-09T12:42:16Z"
+  labels:
+    build: nodejs-build
+  name: nodejs-build
+  namespace: test-1
+  resourceVersion: "142132"
+  selfLink: /apis/build.openshift.io/v1/namespaces/test-1/buildconfigs/nodejs-build
+  uid: 325af3a4-d01e-43f8-80c4-3e2d0cdcee5c
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: nodejs-build:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/cesarvr/hello-world-nodejs
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: nodejs:12-ubi8
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: OqOmbNw1WeLoa_g1KbUO
+    type: GitHub
+  - generic:
+      secret: w2z4iKcvv_psKRdcUEBS
+    type: Generic
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/openshift/nodejs@sha256:f759113389385a7bb317764362efca06202bc7a11cc66877e631a789137d5190
+    type: ImageChange
+status:
+  lastVersion: 1
