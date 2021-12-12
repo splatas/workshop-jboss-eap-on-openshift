@@ -1,0 +1,140 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: "2021-12-10T08:52:58Z"
+  generation: 2
+  labels:
+    app: eap73-basic-s2i
+    app.kubernetes.io/component: eap73-basic-s2i
+    app.kubernetes.io/instance: eap73-basic-s2i
+    application: eap-app
+    template: eap73-basic-s2i
+    xpaas: "7.3"
+  name: eap-app
+  namespace: test-1
+  resourceVersion: "585552"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/test-1/deploymentconfigs/eap-app
+  uid: 6fb51ce0-fdda-48d0-8173-680e1077e88a
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    deploymentConfig: eap-app
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        application: eap-app
+        deploymentConfig: eap-app
+      name: eap-app
+    spec:
+      containers:
+      - env:
+        - name: JGROUPS_PING_PROTOCOL
+          value: dns.DNS_PING
+        - name: OPENSHIFT_DNS_PING_SERVICE_NAME
+          value: eap-app-ping
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "8888"
+        - name: MQ_CLUSTER_PASSWORD
+          value: a30egMlX
+        - name: MQ_QUEUES
+        - name: MQ_TOPICS
+        - name: JGROUPS_CLUSTER_PASSWORD
+          value: XJpI4KEl
+        - name: AUTO_DEPLOY_EXPLODED
+          value: "false"
+        - name: ENABLE_GENERATE_DEFAULT_DATASOURCE
+          value: "false"
+        image: image-registry.openshift-image-registry.svc:5000/test-1/eap-app@sha256:f02bad049f7dc04927ce8c3bff6498f8c01ebd4cc7c32cd7ce79614b578fdc51
+        imagePullPolicy: Always
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/livenessProbe.sh
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: eap-app
+        ports:
+        - containerPort: 8778
+          name: jolokia
+          protocol: TCP
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8888
+          name: ping
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/readinessProbe.sh
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 75
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - eap-app
+      from:
+        kind: ImageStreamTag
+        name: eap-app:latest
+        namespace: test-1
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/test-1/eap-app@sha256:f02bad049f7dc04927ce8c3bff6498f8c01ebd4cc7c32cd7ce79614b578fdc51
+    type: ImageChange
+  - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2021-12-10T09:55:21Z"
+    lastUpdateTime: "2021-12-10T09:56:02Z"
+    message: replication controller "eap-app-1" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2021-12-12T11:32:01Z"
+    lastUpdateTime: "2021-12-12T11:32:01Z"
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  details:
+    causes:
+    - type: ConfigChange
+    message: config change
+  latestVersion: 1
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

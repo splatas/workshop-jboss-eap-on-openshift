@@ -1,5 +1,8 @@
 # Workshop JBoss EAP on Openshift
 
+## Prerequisites
+This workshop requieres an OpenTLC instance deployed.
+
 ## Operation
 
 1. Install OC Client.
@@ -107,6 +110,10 @@
       * oc edit bc eap-app-build-artifacts
 
       ![build-ok-image](./images/new-app.png)
+
+2. Working with JBoss EAP  Operator
+....
+-> Mostrar la pantalla de Create WildFlyServer
 
 
 ## Monitoring
