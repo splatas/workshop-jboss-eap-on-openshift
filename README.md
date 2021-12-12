@@ -25,7 +25,7 @@ This workshop requieres an OpenTLC instance deployed.
       * oc whoami -t
     - Projects / Namespaces:
       * oc projects (list all projects)
-      * oc project PROJECT_NAME: oc new-project eap-demo
+      * oc project PROJECT_NAME: oc new-project eap-demo-$MY_USER
     - New application:
       * oc new-build IMAGE_NAME~SOURCE_CODE --name BUILD_NAME: oc new-build nodejs~https://github.com/cesarvr/hello-world-nodejs --name nodejs-build
       * oc new-app nodejs-build --name=my-nodejs-app
@@ -45,8 +45,8 @@ This workshop requieres an OpenTLC instance deployed.
 
 ## Deploy
 1. Working with JBoss EAP for OpenShift Imagestreams and Templates
-    - Work in namespaces previously created 'eap-demo'
-      * oc project eap-demo
+    - Work in namespaces previously created 'eap-demo-$MY_USER'
+      * oc project eap-demo-$MY_USER
     - If you are using any HTTPS-enabled features, create a keystore and a secret (ex: using eap73-https-s2i template for JDK 8)
       * Create keystore:
         + keytool -genkey -keyalg RSA -alias my-kesystore -keystore my-keystore-file.jks -validity 360 -keysize 2048
@@ -113,7 +113,35 @@ This workshop requieres an OpenTLC instance deployed.
 
       ![build-ok-image](./images/build-ok-image.png)
 
-2. Working with JBoss EAP  Operator
+2. Working with JBoss EAP Operator
+  - Install JBoss EAP Operator:
+    * Open web console, select 'Administrator view'
+    * Select Operators/Installed Operators: must be empty.
+      
+      ![installed-operators-image](./images/installed-operators-image.png)
+
+    * Select OperatorHub, apply filter 'eap'. Select 'JBoss EAP'
+      
+      ![install-operator-eap-image](./images/install-operator-eap-image.png)
+
+    * Select 'JBoss EAP Operator', click Install button.
+      An installation form is shown, then select:
+        - Update channel: **stable**
+        - Installation mode: **A specific namespace...**
+        - Installed namespace: **eap-demo-$MY_USER** (project created previously)
+      
+      Finally click Install. (The installation may take few minutes)
+      
+      ![install-operator-form-image](./images/install-operator-form-image.png)
+
+      ![installed-operator-eap-image](./images/installed-operator-eap-image.png)
+
+  - Create an instance using JBoss EAP Operator:
+    * Click on JBoss EAP Operator installed, then WildflyServer 'create instance' button is displayed.
+    
+    ![create-eap-instance](./images/create-eap-instance.png)
+  
+
 ....
 -> Mostrar la pantalla de Create WildFlyServer
 
