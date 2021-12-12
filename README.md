@@ -21,8 +21,8 @@ This workshop requieres an OpenTLC instance deployed.
 
 
 3. Basic Operations:
-    - Whoami: 
-      * oc whoami
+    - Whoami / Token: 
+      * oc whoami -t
     - Projects / Namespaces:
       * oc projects (list all projects)
       * oc project PROJECT_NAME: oc new-project eap-demo
@@ -86,30 +86,32 @@ This workshop requieres an OpenTLC instance deployed.
 
       * Check the process 
       
-      ![new-app-image](./images/new-app.png)
+      ![new-app-image](./images/new-app-image.png)
 
       * Objects created: 
      
-      ![objects-created-image](./images/new-app.png)
+      ![objects-created-image](./images/objects-created-image.png)
      
-      ![template-detail-1-image](./images/new-app.png)
+      ![template-detail-1-image](./images/template-detail-1-image.png)
      
-      ![template-detail-1-image](./images/new-app.png)
+      ![template-detail-2-image](./images/template-detail-2-image.png)
      
-      ![template-detail-1-image](./images/new-app.png)
+      ![template-detail-3-image](./images/template-detail-3-image.png)
      
-      ![template-detail-1-image](./images/new-app.png)
+      ![template-detail-4-image](./images/template-detail-4-image.png)
+
+      ![template-detail-5-image](./images/template-detail-5-image.png)
       
     - Launch deploy:
       * oc start-build eap-app
 
-      ![build-failed-image](./images/new-app.png)
+      ![build-failed-image](./images/build-failed-image.png)
 
     - Fix: Namespace: eap-demo => openshift
       * oc edit bc eap-app
       * oc edit bc eap-app-build-artifacts
 
-      ![build-ok-image](./images/new-app.png)
+      ![build-ok-image](./images/build-ok-image.png)
 
 2. Working with JBoss EAP  Operator
 ....
@@ -118,100 +120,11 @@ This workshop requieres an OpenTLC instance deployed.
 
 ## Monitoring
 
-## Troubleshooting
+  [Monitoring](./monitoring/README.md)
+
+##  Troubleshooting
+
+  [Troubleshooting](./troubleshooting/README.md)
 
 
-
-
-# -------------------
-
-# JBoss Enterprise Application Platform continuous delivery OpenShift container image
-
-NOTE: Extends link:https://github.com/jboss-container-images/jboss-eap-7-image[JBoss EAP 7.3 container image]
-
-## Importing Imagestreams and Templates
-
-You should have the 'oc' tools available and be logged in to your OpenShift instance. For more details on how to do this, please consult the OpenShift documentation.
-For example, for OpenShift Online, see: https://docs.openshift.com/online/pro/cli_reference/get_started_cli.html
-[source, bash]
-----
-for resource in eap73-image-stream.json \
-  eap73-amq-persistent-s2i.json \
-  eap73-amq-s2i.json \
-  eap73-basic-s2i.json \
-  eap73-https-s2i.json \
-  eap73-sso-s2i.json \
-  eap73-third-party-db-s2i.json \
-  eap73-tx-recovery-s2i.json
-do
-  oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-eap-7-openshift-image/7.3.x/templates/${resource}
-done
-----
-
-If you have administrative access to the general `openshift` namespace and want the image streams and templates to be accessible by all projects, add -n openshift to the oc replace line of the command. For example:
-
-[source, bash]
-----
-oc replace -n openshift --force -f ...
-----
-
-See the OpenShift documentation at https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.3/html/ for more details on importing templates.
-
-#### Updating Existing Images
-To update an to the most recent image:
-
-[source, bash]
-----
-oc import-image jboss-eap73-openshift:7.3
-----
-
-Optionally include namespace to the import:
-[source, bash]
-----
-oc -n myproject import-image jboss-eap73-openshift:7.3
-----
-
-#### Creating New Applications With Templates
-Example:
-
-[source, bash]
-----
-oc -n myproject new-app eap73-basic-s2i -p APPLICATION_NAME=eap73-basic-app
-----
-
-or, if a namespace was used with `-n` above:
-[source, bash]
-----
-oc -n myproject new-app eap73-basic-s2i -p APPLICATION_NAME=eap73-basic-app -p IMAGE_STREAM_NAMESPACE=myproject
-----
-
-For more information on application creation and deployment see the OpenShift documentation at https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.3/html/ for more details on importing templates.
-
-## Creating Secrets
-
-Some of the included templates require the creation of secrets.
-
-Example:
-[source, bash]
-----
-$ keytool -genkey -keyalg RSA -alias eapdemo-selfsigned -keystore keystore.jks -validity 360 -keysize 2048
-$ oc secrets new eap7-app-secret keystore.jks
-----
-
-Example secrets may also be found here: https://github.com/jboss-openshift/application-templates/tree/master/secrets
-
-[source, bash]
-----
-oc create -n myproject -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/secrets/eap-app-secret.json
-oc create -n myproject -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/secrets/eap7-app-secret.json
-oc create -n myproject -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/secrets/sso-app-secret.json
-----
-
-Please refer to the EAP Documentation for additional details.
-
-https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.3/html/ 
-
-## License
-
-See link:LICENSE[LICENSE] file.
 
