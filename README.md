@@ -141,6 +141,11 @@ This workshop requieres an OpenTLC instance deployed.
     
     ![create-eap-instance](./images/create-eap-instance.png)
   
+    Complete fields:
+      - Name: the app name
+      - Replicas: number of instances
+      - Application Name: image-registry.openshift-image-registry.svc:5000/test-1/eap-app 
+
     ![eap-operator-form-image](./images/eap-operator-form-image.png)
 
     * Or create from file:
