@@ -1,0 +1,14 @@
+apiVersion: wildfly.org/v1alpha1
+kind: WildFlyServer
+metadata:
+  name: eap-app-from-operator
+  namespace: test-1
+spec:
+  applicationImage: 'image-registry.openshift-image-registry.svc:5000/test-1/eap-app'
+  replicas: 1
+storage:
+  volumeClaimTemplate:
+    spec:
+      ressources:
+        requests:
+          storage: 3Gi

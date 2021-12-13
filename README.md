@@ -141,9 +141,15 @@ This workshop requieres an OpenTLC instance deployed.
     
     ![create-eap-instance](./images/create-eap-instance.png)
   
+    ![eap-operator-form-image](./images/eap-operator-form-image.png)
 
-....
--> Mostrar la pantalla de Create WildFlyServer
+    * Or create from file:
+    
+    ![eap-app-from-operator-wfs.yaml.png](./images/eap-app-from-operator-wfs.yaml.png)
+    
+      - oc create -f ./resources/eap-app-from-operator-wfs.yaml
+
+    Check deleting some objects created with operators...
 
 
 ## Monitoring
