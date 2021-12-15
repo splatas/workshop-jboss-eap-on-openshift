@@ -160,10 +160,3 @@ This workshop requieres an OpenTLC instance deployed.
 ## Monitoring
 
   [Monitoring](./monitoring/README.md)
-
-##  Troubleshooting
-
-  [Troubleshooting](./troubleshooting/README.md)
-
-
-

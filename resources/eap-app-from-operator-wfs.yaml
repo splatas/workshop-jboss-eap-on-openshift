@@ -6,6 +6,8 @@ metadata:
 spec:
   applicationImage: 'image-registry.openshift-image-registry.svc:5000/test-1/eap-app'
   replicas: 1
+  configMaps:
+    - clusterbench-config-map
 storage:
   volumeClaimTemplate:
     spec:
