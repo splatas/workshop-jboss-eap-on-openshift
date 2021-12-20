@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jboss-cli
+  namespace: test-1
+data:
+  extensions.cli: |-
+    embed-server--std-out=echo --server-config=standalone-openshift.xml
+    :whoami
+    quit
+  postconfigure.sh: |-
+    #!/usr/bin/env bash
+    set -x
+    echo "Executing postconfigure.sh"
+    $JBOSS_HOME/bin/jboss-cli.sh --file=JBOSS_HOME/extensions/extensions.cli
