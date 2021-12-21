@@ -11,14 +11,30 @@ We have 3 steps:
 
 
 ### Installing Prometheus to collect information.
-1. Start the installation usiong Prometheus Operator...
+1. Start the installation using Prometheus Operator.
 
-     ![new-app-image](../images/new-app.png)
+    Go to Admininistrator view / Operators / Operator Hub and select the Prometheus Operator.
+
+    ![prometheus-operator](../images/prometheus-operator.png)
+
+    Then install in your namespace:
+
+    ![prometheus-install-form](../images/prometheus-install-form.png)
+
+    ![prometheus-installing](../images/prometheus-installing.png)
 
 ### Installing Grafana to use dashboards
 1. Start the installation usiong Grafana Operator...
 
-     ![new-app-image](../images/new-app.png)
+    Go to Admininistrator view / Operators / Operator Hub and select the Grafana Operator.
+
+    ![grafana-operator](../images/grafana-operator.png)
+
+    Then install in your namespace:
+
+    ![grafana-install-form](../images/grafana-install-form.png)
+
+    ![grafana-installing](../images/grafana-installing.png)
 
 2. Setting up Grafana.
 
@@ -70,6 +86,8 @@ We have 3 steps:
 
 2. Check files:
     - pom.xml:
+    
+    ```xml
         <dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-openshift</artifactId>
@@ -84,19 +102,41 @@ We have 3 steps:
 		    <groupId>io.quarkus</groupId>
 		    <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
 		</dependency>
+    ```
 
-    - Java class 'ExampleResource' (src/main/java/com/redhat/ExampleResource.java)
+    - Java class 'ExampleResource' (src/main/java/com/redhat/ExampleResource.java), services: 'getSongs' and 'populateSongs':
+
+    ```java
+        @Path("/q-metrics")
+        public class ExampleResource {
+	        ...
+        
+            @GET
+            @Produces(MediaType.TEXT_PLAIN)
+            @Path("/getSongs")
+            @Timed("time_get_songs")
+            @Counted
+            public List<String> getSongs() {
+                ...
+
+            @GET
+            @Produces(MediaType.TEXT_PLAIN)
+            @Path("/populateSongs")
+            @Timed("time_populate_songs")
+            @Counted
+            public List<String> populateSongs() {
+                ...
+
+    ```
 
 
-    - Some services: 'getSongs' and 'populateSongs'
-
-3. Compile the application:
+3. Deploy the application locally:
 
     ```shell script
     mvn quarkus:dev
     ```
 
-     ![new-app-image](../images/new-app.png)
+     ![quarkus-local-deploy](../images/quarkus-local-deploy.png)
 
     This command compile, download dependencies and launch the application in DEV mode locally.
 
@@ -109,10 +149,10 @@ We have 3 steps:
 
     - Build, create objects and deploy the app on the cluster:
         ```shell script
-        mvn clean package -Dquarkus.kubernetes-client.master-url=__CLUSTER-URL__ -Dquarkus.kubernetes-client.token=__TOKEN__
+        mvn package -Dquarkus.kubernetes-client.master-url=__CLUSTER-URL__ -Dquarkus.kubernetes-client.token=__TOKEN__
 
 
-        mvn clean package -DskipTests -Dquarkus.kubernetes-client.master-url=https://api.cluster-58b1.dynamic.opentlc.com:6443 -Dquarkus.kubernetes-client.token=sha256~rsr0JvfMKJ4haHlilO52TSJ8JFEfNpR43MAv8DCaQJE -Dquarkus.kubernetes.deploy=true -Dquarkus.kubernetes-client.trust-certs=true -Dquarkus.openshift.route.expose=true 
+        mvn package -DskipTests -Dquarkus.kubernetes-client.master-url=https://api.cluster-58b1.dynamic.opentlc.com:6443 -Dquarkus.kubernetes-client.token=sha256~rsr0JvfMKJ4haHlilO52TSJ8JFEfNpR43MAv8DCaQJE -Dquarkus.kubernetes.deploy=true -Dquarkus.kubernetes-client.trust-certs=true -Dquarkus.openshift.route.expose=true 
         ```
          ![quarkus-build-deploy-on-ocp-image](../images/quarkus-build-deploy-on-ocp-image.png)
 
@@ -121,9 +161,9 @@ We have 3 steps:
         ![quarkus-build-deploy-on-ocp-image-1](../images/quarkus-build-deploy-on-ocp-image-1.png)
 
 
-    After that you should see an instance of the application running on your cluster:
+        After that you should see an instance of the application running on your cluster:
 
-    ![quarkus-app-deployed-on-ocp-image](../images/quarkus-app-deployed-on-ocp-image.png)
+        ![quarkus-app-deployed-on-ocp-image](../images/quarkus-app-deployed-on-ocp-image.png)
 
 
     - Working with the application:
@@ -160,7 +200,7 @@ We have 3 steps:
             - @Timed
             - @Counted
 
-        Just with those resources you can see metrics of those endpoints, generated easily. When you start to consume those endpoints, the metrics are available on [Metrics Endpoint](http://quarkus-metrics-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/q/metrics)
+        Just with those resources you can see metrics of your endpoints, generated easily. When you start to consume those endpoints, the metrics are available on [Metrics Endpoint](http://quarkus-metrics-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/q/metrics)
 
 
         ![quarkus-app-getsongs-metrics-image.png](../images/quarkus-app-getsongs-metrics-image.png)
@@ -171,59 +211,3 @@ We have 3 steps:
 
 
 ### FIN ------------------------
-# code-with-quarkus Project
-
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
-
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
-
-## Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
-```
-
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
-
-## Packaging and running the application
-
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/code-with-quarkus-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
-
-## Provided Code
-
-### RESTEasy JAX-RS
-
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
