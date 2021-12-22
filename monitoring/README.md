@@ -7,6 +7,13 @@ We have 3 steps:
 
 2. Installing Grafana to use dashboards
 
+    Use default values, except for 'Update Channel': select 'original'
+
+    ![grafana-operator-form.png](../images/grafana-operator-form.png)
+
+
+
+
 3. Adapt our application to generate metrics that will be shown on dashboards.
 
 
