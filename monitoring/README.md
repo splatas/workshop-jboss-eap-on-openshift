@@ -23,6 +23,18 @@ We have 3 steps:
 
     ![prometheus-installing](../images/prometheus-installing.png)
 
+2. Enabling monitoring for user-defined projects (done):
+
+     ```shell script
+        oc create -f ./prometheus/cluster-monitoring-config.yaml
+
+        oc create -f ./prometheus/user-workload-monitoring-config.yaml
+     ```
+
+    For more details, see this link: https://docs.openshift.com/container-platform/4.7/monitoring/enabling-monitoring-for-user-defined-projects.html
+
+
+
 ### Installing Grafana to use dashboards
 1. Start the installation usiong Grafana Operator...
 
@@ -169,7 +181,7 @@ We have 3 steps:
     - Working with the application:
         If you click on the exposed route you will see a page like this:
 
-        Route: http://quarkus-metrics-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/
+        Route (example): http://quarkus-metrics-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/
         
         ![quarkus-app-main-page-image](../images/quarkus-app-main-page-image.png)
         
@@ -205,7 +217,18 @@ We have 3 steps:
 
         ![quarkus-app-getsongs-metrics-image.png](../images/quarkus-app-getsongs-metrics-image.png)
 
--
+
+
+5. Create Service Monitor:
+    ```shell script
+    oc create -f ./prometheus/quarkus-metrics-service-monitor.yaml
+    ```
+    
+    Once created the service monitor, go to Developer view / Monitoring / Metrics 
+
+     ![prometheus-metrics-service-monitor.png](../images/prometheus-metrics-service-monitor.png)
+   
+
 -
 -
 

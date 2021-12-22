@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    # k8s-app: prometheus-example-monitor
+    k8s-app: prometheus-quarkus-metrics-monitor
+  # name: prometheus-example-monitor
+  name: prometheus-quarkus-metrics-monitor
+  # namespace: ns1
+spec:
+  endpoints:
+  - interval: 30s
+    port: web
+    scheme: http
+  selector:
+    matchLabels:
+      # app: prometheus-example-app
+      app: quarkus-metrics
