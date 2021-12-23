@@ -294,6 +294,46 @@ We have 3 steps:
     
     ##Password: secret
 
+    Login on Grafana using the route, similar to this: https://grafana-route-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/
+
+    1. Create a Datasource:
+
+        Click on left menu, 'Configuration / Data source':
+    
+        ![grafana-new-datasource.png](../images/grafana-new-datasource.png)
+    
+        Click on Add datasource and select type 'Prometheus':
+
+        ![grafana-datasource-prometheus.png](../images/grafana-datasource-prometheus.png)
+
+
+        Create the configuration with this parameters:
+        - Name: a name to identify the datasource 
+        - URL: http://PROMETHEUS_SERVICE_NAME:9090  (i.e.: http://prometheus-operated:9090)
+
+        ... and click 'Save and Test'.
+
+    ![grafana-new-datasource-config.png](../images/grafana-new-datasource-config.png)
+
+    2. Import a Dashboard:
+
+         Click on left menu, 'Configuration / + (Plus simbol) / Import': 14370
+
+        ![grafana-import-dashboard.png](../images/grafana-import-dashboard.png)
+
+        
+        The id 14370 refers to a JVM Quarkus - Micrometer Metrics Dashboard. For more details please see the following link:
+        https://grafana.com/grafana/dashboards/14370
+
+
+        Click 'Upload' button and then select the datasource created previously 'Prometheus', and then 'Import':
+        ![grafana-import-dashboard-14370.png](../images/grafana-import-dashboard-14370.png)
+
+        
+        Details:
+        ![grafana-import-dashboard-14370-details.png](../images/grafana-import-dashboard-14370-details.png)
+        
+
 
 
 
