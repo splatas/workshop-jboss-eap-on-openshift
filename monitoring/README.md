@@ -3,63 +3,15 @@
 
 In order to show how monitoring works we developed an Application based on Quarkus and Micrometer.
 We have 3 steps:
-1. Installing Prometheus to collect information.
+    
+    - Install Prometheus to gather information.
 
-2. Installing Grafana to use dashboards
+    - Install Grafana to use dashboards
 
-    Use default values, except for 'Update Channel': select 'original'
-
-    ![grafana-operator-form.png](../images/grafana-operator-form.png)
-
+    - Configure the application to generate metrics that will be shown on dashboards.
 
 
-
-3. Adapt our application to generate metrics that will be shown on dashboards.
-
-
-### Installing Prometheus to collect information.
-1. Start the installation using Prometheus Operator.
-
-    Go to Admininistrator view / Operators / Operator Hub and select the Prometheus Operator.
-
-    ![prometheus-operator](../images/prometheus-operator.png)
-
-    Then install in your namespace:
-
-    ![prometheus-install-form](../images/prometheus-install-form.png)
-
-    ![prometheus-installing](../images/prometheus-installing.png)
-
-2. Enabling monitoring for user-defined projects (done):
-
-     ```shell script
-        oc create -f ./prometheus/cluster-monitoring-config.yaml
-
-        oc create -f ./prometheus/user-workload-monitoring-config.yaml
-     ```
-
-    For more details, see this link: https://docs.openshift.com/container-platform/4.7/monitoring/enabling-monitoring-for-user-defined-projects.html
-
-
-
-### Installing Grafana to use dashboards
-1. Start the installation usiong Grafana Operator...
-
-    Go to Admininistrator view / Operators / Operator Hub and select the Grafana Operator.
-
-    ![grafana-operator](../images/grafana-operator.png)
-
-    Then install in your namespace:
-
-    ![grafana-install-form](../images/grafana-install-form.png)
-
-    ![grafana-installing](../images/grafana-installing.png)
-
-2. Setting up Grafana.
-
-     ![new-app-image](../images/new-app.png)
-
-### Adapt our application
+### 1.Configure the application for metrics
 
 #### Prerrequisites
 1. Maven:
@@ -186,6 +138,7 @@ We have 3 steps:
 
 
     - Working with the application:
+        
         If you click on the exposed route you will see a page like this:
 
         Route (example): http://quarkus-metrics-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/
@@ -195,7 +148,7 @@ We have 3 steps:
 
         
         You have an Endpoint to see the metrics of this app in raw format:
-        http://quarkus-metrics-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/q/metrics
+        http://quarkus-metrics-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/metrics
 
         ![quarkus-app-metrics-image](../images/quarkus-app-metrics-image.png)
 
@@ -226,18 +179,122 @@ We have 3 steps:
 
 
 
-5. Create Service Monitor:
-    ```shell script
-    oc create -f ./prometheus/quarkus-metrics-service-monitor.yaml
-    ```
-    
-    Once created the service monitor, go to Developer view / Monitoring / Metrics 
+    Go to Developer view / Monitoring / Metrics 
 
      ![prometheus-metrics-service-monitor.png](../images/prometheus-metrics-service-monitor.png)
    
 
--
--
+
+### 2.Install Prometheus to gather information.
+
+1. Start the installation using Prometheus Operator.
+
+    Go to Admininistrator view / Operators / Operator Hub and select the Prometheus Operator.
+
+    ![prometheus-operator](../images/prometheus-operator.png)
+
+    Then install in your namespace:
+
+    ![prometheus-install-form](../images/prometheus-install-form.png)
+
+    ![prometheus-installing](../images/prometheus-installing.png)
+
+
+2. Create a Prometheus instance and Service Monitor
+    ```shell script
+        oc create -f ./prometheus/prometheus-instance.yaml
+
+        oc create -f ./prometheus/quarkus-metrics-service-monitor.yaml
+    ```
+
+    After this step you should see an instance of Prometheus running and a Service Monitor created.
+
+    ![prometheus-instance](../images/prometheus-instance.png)
+
+    ![prometheus-service-monitor](../images/prometheus-service-monitor.png)
+
+
+    - Expose Prometheus service (just for testing):
+        Prometheus instance not expose a route by default, so we can create one in order to access the Prometheus Graph page.
+
+        ```shell script
+            oc get svc | grep prometheus
+        ```
+        
+        We need to expose the prometheus service create previously
+        ```shell script
+            oc expose svc $PROMETHEUS_SERVICE (shown with previous command)
+        ```
+
+        After that you should see a rout like this:
+        
+        http://prometheus-operated-eap-demo-sergio.apps.cluster-58b1.dynamic.opentlc.com/graph
+
+        ![prometheus-page.png](../images/prometheus-page.png)
+    
+    - Verify the configuration:
+        
+        An easy way to validate the configuration is ok, click on 'Status / Targets' menu:
+
+        ![prometheus-target-option.png](../images/prometheus-target-option.png)
+
+
+        You should see a target like this:
+
+        ![prometheus-targets.png](../images/prometheus-targets.png)
+
+
+
+3. Enabling monitoring for user-defined projects (done):
+
+     ```shell script
+        oc create -f ./prometheus/cluster-monitoring-config.yaml
+
+        oc create -f ./prometheus/user-workload-monitoring-config.yaml
+     ```
+
+    For more details, see this link: https://docs.openshift.com/container-platform/4.7/monitoring/enabling-monitoring-for-user-defined-projects.html
+
+
+
+### 3.Install Grafana to use dashboards
+
+1. Start the installation usiong Grafana Operator...
+
+    Go to Admininistrator view / Operators / Operator Hub and select the Grafana Operator.
+
+    ![grafana-operator](../images/grafana-operator.png)
+
+    Then install in your namespace:
+
+    ![grafana-install-form](../images/grafana-install-form.png)
+
+    Use default values, except for 'Update Channel': select 'original'
+
+    ![grafana-operator-form.png](../images/grafana-operator-form.png)
+
+
+    ![grafana-installing](../images/grafana-installing.png)
+
+2. Setting up Grafana.
+
+    Once installed the Grafana Operator, we need to create an instance. So, go to Installed Operators / Grafana Operator / Create instance
+
+    ![grafana-create-instance.png](../images/grafana-create-instance.png)
+
+
+    Complete the field name and click create:
+
+    ![grafana-create-instance-form.png](../images/grafana-create-instance-form.png)
+
+
+    The instance is created with the following default credentials:
+    
+    ##User: root
+    
+    ##Password: secret
+
+
 
 
 ### FIN ------------------------
