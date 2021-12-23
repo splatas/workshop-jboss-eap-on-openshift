@@ -5,7 +5,7 @@ metadata:
     k8s-app: prometheus-quarkus-metrics-monitor
     team: quarkus-metrics
   name: prometheus-quarkus-metrics-monitor
- spec:
+spec:
   endpoints:
   - interval: 30s
     port: http
