@@ -244,6 +244,25 @@ We have 3 steps:
         ![prometheus-targets.png](../images/prometheus-targets.png)
 
 
+        ### WARNING: IF YOU DON'T SEE A TARGET DEFINED LIKE IN PREVIOUS IMAGE, YOU SHOULD VERIFY:
+          - In Prometheus ServiceMonitor: 
+            
+            ####  SELECTOR / matchLables: (quarkus-metrics)
+            ####  ENDPOINT / port: (http)
+
+        ![prometheus-service-monitor-labels.png](../images/prometheus-service-monitor-labels.png)
+
+        ### - Application Service LABEL:
+            
+        ![app-service-labels.png](../images/app-service-labels.png)
+
+
+    - Metrics on Promehteus:
+
+    Once you have configured the integration between the application and Prometheus, you should see the metrics on Promethues Dashboard:
+
+    ![prometheus-dashboard.png](../images/prometheus-dashboard.png)
+
 
 3. Enabling monitoring for user-defined projects (done):
 
